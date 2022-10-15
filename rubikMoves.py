@@ -12,55 +12,64 @@ class Rubik(object):
         o = 'o' # orange
 
         # Faces:
-        #   1
-        # 2 3 4 5
-        #   6
+        #   0
+        # 1 2 3 4
+        #   5
 
-        self.face1 =   [[w,w,w], 
+
+        self.face0 =   [[w,w,w], 
                         [w,w,w], 
                         [w,w,w]]
-        self.face2 =   [[y,y,y], 
-                        [y,y,y], 
-                        [y,y,y]]
-        self.face3 =   [[b,b,b], 
+        self.face1 =   [[o,o,o], 
+                        [o,o,o], 
+                        [o,o,o]]
+        self.face2 =   [[b,b,b], 
                         [b,b,b], 
                         [b,b,b]]
+        self.face3 =   [[r,r,r], 
+                        [r,r,r], 
+                        [r,r,r]]
         self.face4 =   [[g,g,g], 
                         [g,g,g], 
                         [g,g,g]]
-        self.face5 =   [[r,r,r], 
-                        [r,r,r], 
-                        [r,r,r]]
-        self.face6 =   [[o,o,o], 
-                        [o,o,o], 
-                        [o,o,o]]
+        self.face5 =   [[y,y,y], 
+                        [y,y,y], 
+                        [y,y,y]]
+
+        self.faces = [self.face0, self.face1, self.face2, self.face3, self.face4, self.face5]
 
     ############ MOVES #############
 
     """ Shift upper layer clockwise"""
     def u(self):
-        face2Upper = self.face2[0]
+        face1self.face1Upper = self.face1[0]
+        self.face1[0] = self.face2[0]
         self.face2[0] = self.face3[0]
-        self.face3[0] = self.face4[0]
         self.face4[0] = self.face5[0]
-        self.face5[0] = face2Upper
+        self.face5[0] = face1self.face1Upper
 
     """ Shift lower layer clockwise"""
     def d(self):
-        face5Lower = self.face5[2]
-        self.face5[2] = self.face4[2]
+        face4self.face4Lower = self.face4[2]
         self.face4[2] = self.face3[2]
         self.face3[2] = self.face2[2]
-        self.face2[2] = face5Lower
+        self.face2[2] = self.face1[2]
+        self.face1[2] = face4self.face4Lower
         
     """ Shift right layer clockwise"""
     def r(self):
-        face1Right = getRightSide(self.face1)
-        
-        self.face1[0] = self.face3[0]
-        self.face3[0] = self.face4[0]
-        self.face4[0] = self.face5[0]
-        self.face5[0] = face2Upper
+        face0Right = self.getRightSide(self.face0)
+        self.changeRightSide(self.face0, self.face2)
+        self.changeRightSide(self.face2, self.face5)
+        self.changeRightSide(self.face5, self.face2)
+        self.face2[0] = self.face4[0]
+        self.face4[0] = self.face4[0]
+        self.face4[0] = face0Right
+
+    def changeSides(self, faceFrom, faceTo):
+        faceFrom[0][2] = faceTo[0][2]
+        faceFrom[1][2] = faceTo[1][2]
+        faceFrom[2][2] = faceTo[2][2]
 
     def getRightSide(self, face):
         return [face[0][2], face[1][2], face[2][2]]
@@ -70,29 +79,62 @@ class Rubik(object):
         face[1][2] = newSide[1]
         face[2][2] = newSide[2]
 
+    """ Shift upper layer anticlockwise"""
+    def uPrime(self):
+        face1self.face1Upper = self.face1[0]
+        self.face1[0] = self.face2[0]
+        self.face2[0] = self.face4[0]
+        self.face4[0] = self.face4[0]
+        self.face4[0] = face1self.face1Upper
 
-    def fileOutput():
-        f = open("myfile.txt", "a")
 
+
+    ###########  FILE OUTPUT  ##########
+    def faceToText(self, face):
+        text = ""
+        for layer in face:
+            for color in layer:
+                text += color
+        
+        return text
+
+    def fileOutput(self):
+        f = open("myfile.txt", "w")
+
+        for face in self.faces:
+            f.write(self.faceToText(face))
+            f.write("\n")
+
+
+    ########## PRINT INSTANCE ###########
     def __str__(self):
-        representation = ""
-        print(" "*13 + "-"*13)
-        for row in self.face1:
-            print("             ", end="") # black space
-            print("|| {} | {} | {} ".format(row[0], row[1], row[2]), end="")
-            print("||")
-        print("-"*13*4)
-        for i in range(3):
-            for face in [self.face2, self.face3, self.face4, self.face5]:
-                print("|| {} | {} | {} ".format(face[i][0], face[i][1], face[i][2]), end = "")
-            print("||")
-        print("-"*13*4)
+        cube = ""
+        
+        cube += " "*13 + "-"*15 + "\n"
+        
+        for row in self.face0:
+            cube += " "*13 # black space
+            cube += "|| {} | {} | {} ".format(row[0], row[1], row[2])
+            cube += "||\n"
+        
+        cube += "-"*54 + "\n"
 
-        for row in self.face6:
-            print("             ", end="") # black space
-            print("|| {} | {} | {} ".format(row[0], row[1], row[2]), end="")
-            print("||")
-        print(" "*13 + "-"*13)
+        for i in range(3):
+            for face in [self.face1, self.face2, self.face4, self.face4]:
+                cube += "|| {} | {} | {} ".format(face[i][0], face[i][1], face[i][2])
+            
+            cube += "||\n"
+        
+        cube += "-"*54 + "\n"
+
+        for row in self.face5:
+            cube += " "*13 # black space
+            cube += "|| {} | {} | {} ".format(row[0], row[1], row[2])
+            cube += "||\n"
+        
+        cube += " "*13 + "-"*15 + "\n"
+
+        return cube
 
 
 
@@ -100,9 +142,8 @@ class Rubik(object):
 
 def main():
     cube = Rubik()
-    print(cube)
-    cube.u()
-
+    print(cube.faceToText(cube.face0))
+    cube.fileOutput()
     print(cube)
     
 if __name__ == "__main__":
