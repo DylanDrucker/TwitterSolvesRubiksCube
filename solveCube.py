@@ -1,8 +1,9 @@
 import rubikMoves
 import os
+cube = rubikMoves.Rubik()
 
 def main():
-    cube = rubikMoves.Rubik()
+    
 
     modified = os.path.getmtime("move.txt")
 
@@ -55,14 +56,14 @@ def main():
                 cube.twice(cube.f)
             elif move == "B2":
                 cube.twice(cube.b)
-    
+            else: 
+                print("NO MOVE")
+                continue
 
-            if move != "NO MOVE":
-                cube.fileOutput()
-                print(cube)
-            
+            cube.fileOutput()
+
             print(move)
+            print(cube)
         
-
 
 main()
