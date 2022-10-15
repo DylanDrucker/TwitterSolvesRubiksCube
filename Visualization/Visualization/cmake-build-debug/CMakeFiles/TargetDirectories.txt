@@ -1,0 +1,3 @@
+/home/julia/Visualization/cmake-build-debug/CMakeFiles/Visualization.dir
+/home/julia/Visualization/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/julia/Visualization/cmake-build-debug/CMakeFiles/rebuild_cache.dir
