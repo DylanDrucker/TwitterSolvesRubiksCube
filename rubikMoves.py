@@ -17,24 +17,24 @@ class Rubik(object):
         #   5
 
 
-        self.face0 =   [[w,w,w], 
-                        [w,w,w], 
-                        [w,w,w]]
-        self.face1 =   [[o,o,o], 
-                        [o,o,o], 
-                        [o,o,o]]
-        self.face2 =   [[b,b,b], 
-                        [b,b,b], 
-                        [b,b,b]]
-        self.face3 =   [[r,r,r], 
-                        [r,r,r], 
-                        [r,r,r]]
-        self.face4 =   [[g,g,g], 
-                        [g,g,g], 
-                        [g,g,g]]
-        self.face5 =   [[y,y,y], 
+        self.face0 =   [[y,y,y], 
                         [y,y,y], 
                         [y,y,y]]
+        self.face1 =   [[b,b,b], 
+                        [b,b,b], 
+                        [b,b,b]]
+        self.face2 =   [[r,r,r], 
+                        [r,r,r], 
+                        [r,r,r]]
+        self.face3 =   [[g,g,g], 
+                        [g,g,g], 
+                        [g,g,g]]
+        self.face4 =   [[o,o,o], 
+                        [o,o,o], 
+                        [o,o,o]]
+        self.face5 =   [[w,w,w], 
+                        [w,w,w], 
+                        [w,w,w]]
 
         self.faces = [self.face0, self.face1, self.face2, self.face3, self.face4, self.face5]
 
@@ -42,50 +42,77 @@ class Rubik(object):
 
     """ Shift upper layer clockwise"""
     def u(self):
-        face1self.face1Upper = self.face1[0]
+        face1Upper = self.face1[0]
         self.face1[0] = self.face2[0]
         self.face2[0] = self.face3[0]
-        self.face4[0] = self.face5[0]
-        self.face5[0] = face1self.face1Upper
+        self.face3[0] = self.face4[0]
+        self.face4[0] = face1Upper
 
     """ Shift lower layer clockwise"""
     def d(self):
-        face4self.face4Lower = self.face4[2]
+        face4Lower = self.face4[2]
         self.face4[2] = self.face3[2]
         self.face3[2] = self.face2[2]
         self.face2[2] = self.face1[2]
-        self.face1[2] = face4self.face4Lower
+        self.face1[2] = face4Lower
+
+    def r2(self):
+        face0Lower = self.face0[2]
+        self.face0[2] = self.takeColumn(self.face1, 2)[::-1]
+        self.changeColumn(self.face1, 2, self.face5[0])
+        self.face5[0] = self.takeColumn(self.face3, 0)[::-1]
+        self.changeColumn(self.face3, 0, face0Lower)
+
+    """ Shift Left Layer Clockwise"""
+    def l(self):
+        face0Upper = self.face0[0]
+        self.face0[0] = self.takeColumn(self.face3, 2)
+        self.changeColumn(self.face3, 2, self.face5[2])
+        self.face5[2] = self.takeColumn(self.face1, 0)
+        self.changeColumn(self.face1, 0, face0Upper)
+
+    """Shift back side clockwise"""
+    def b(self):
+        face0Right = self.takeColumn(self.face0, 2)
+        self.changeColumn(self.face0, 2, self.takeColumn(self.face2, 2))
+        self.changeColumn(self.face2, 2, self.takeColumn(self.face5, 2))
+        self.changeColumn(self.face5, 2, self.takeColumn(self.face4, 0)[::-1])
+        self.changeColumn(self.face4, 0, face0Right[::-1])
+
+    """"Shift front side clockwise"""
+    def f(self):
+        face0Left = self.takeColumn(self.face0, 0)
+        self.changeColumn(self.face0, 0, self.takeColumn(self.face4, 2)[::-1])
+        self.changeColumn(self.face4, 2, self.takeColumn(self.face5, 0)[::-1])
+        self.changeColumn(self.face5, 0, self.takeColumn(self.face2, 0))
+        self.changeColumn(self.face2, 0, face0Left)
         
-    """ Shift right layer clockwise"""
-    def r(self):
-        face0Right = self.getRightSide(self.face0)
-        self.changeRightSide(self.face0, self.face2)
-        self.changeRightSide(self.face2, self.face5)
-        self.changeRightSide(self.face5, self.face2)
-        self.face2[0] = self.face4[0]
-        self.face4[0] = self.face4[0]
-        self.face4[0] = face0Right
+    ############# COUNTERCLOCKWISE MOVES ###############
 
-    def changeSides(self, faceFrom, faceTo):
-        faceFrom[0][2] = faceTo[0][2]
-        faceFrom[1][2] = faceTo[1][2]
-        faceFrom[2][2] = faceTo[2][2]
+    """ prime methods"""
+    def prime(self, move):
+        for i in range(3):
+            move()
 
-    def getRightSide(self, face):
-        return [face[0][2], face[1][2], face[2][2]]
+    def twice (self, move):
+        for i in range(2):
+            move()
 
-    def setRightSide(self, face, newSide):
-        face[0][2] = newSide[0]
-        face[1][2] = newSide[1]
-        face[2][2] = newSide[2]
+    
 
-    """ Shift upper layer anticlockwise"""
-    def uPrime(self):
-        face1self.face1Upper = self.face1[0]
-        self.face1[0] = self.face2[0]
-        self.face2[0] = self.face4[0]
-        self.face4[0] = self.face4[0]
-        self.face4[0] = face1self.face1Upper
+    ############ AUXILIAR METHODS #############
+
+    def takeColumn(self, face, colIndex):
+        col = []
+        for layer in face:
+            col.append(layer[colIndex])
+        return col
+
+    def changeColumn(self, face, colIndex, newColumn):
+        for i in range(len(newColumn)):
+            face[i][colIndex] = newColumn[i]
+
+    
 
 
 
@@ -120,7 +147,7 @@ class Rubik(object):
         cube += "-"*54 + "\n"
 
         for i in range(3):
-            for face in [self.face1, self.face2, self.face4, self.face4]:
+            for face in [self.face1, self.face2, self.face3, self.face4]:
                 cube += "|| {} | {} | {} ".format(face[i][0], face[i][1], face[i][2])
             
             cube += "||\n"
@@ -142,8 +169,8 @@ class Rubik(object):
 
 def main():
     cube = Rubik()
-    print(cube.faceToText(cube.face0))
-    cube.fileOutput()
+    print(cube)
+    cube.prime(cube.u)
     print(cube)
     
 if __name__ == "__main__":

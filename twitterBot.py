@@ -79,4 +79,6 @@ def get_replys(api, twt_id):
     
     return replys, my_base_tweet
 
-print(create_api(API_SECRET, API_KEY, ACCESS_TOKEN, ACCESS_SECRET))
+def main():
+    print(create_api(API_SECRET, API_KEY, ACCESS_TOKEN, ACCESS_SECRET))
+main()
