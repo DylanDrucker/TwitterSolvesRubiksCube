@@ -55,35 +55,54 @@ class Rubik(object):
         
     """ Shift right layer clockwise"""
     def r(self):
-        face1Right = self.face1[0][2]
-        self.face2[0] = self.face3[0]
+        face1Right = getRightSide(self.face1)
+        
+        self.face1[0] = self.face3[0]
         self.face3[0] = self.face4[0]
         self.face4[0] = self.face5[0]
         self.face5[0] = face2Upper
 
-    def 
+    def getRightSide(self, face):
+        return [face[0][2], face[1][2], face[2][2]]
 
+    def setRightSide(self, face, newSide):
+        face[0][2] = newSide[0]
+        face[1][2] = newSide[1]
+        face[2][2] = newSide[2]
+
+
+    def fileOutput():
+        f = open("myfile.txt", "a")
 
     def __str__(self):
+        representation = ""
+        print(" "*13 + "-"*13)
         for row in self.face1:
-            print("                ", end="") # black space
-            print("| {} | {} | {} ".format(row[0], row[1], row[2]), end="")
-            print("|")
-
+            print("             ", end="") # black space
+            print("|| {} | {} | {} ".format(row[0], row[1], row[2]), end="")
+            print("||")
+        print("-"*13*4)
         for i in range(3):
             for face in [self.face2, self.face3, self.face4, self.face5]:
-                print("| {} | {} | {} ".format(face[i][0], face[i][1], face[i][2]), end = "")
-            print("|")
-
+                print("|| {} | {} | {} ".format(face[i][0], face[i][1], face[i][2]), end = "")
+            print("||")
+        print("-"*13*4)
 
         for row in self.face6:
-            print("                ", end="") # black space
-            print("| {} | {} | {} ".format(row[0], row[1], row[2]), end="")
-            print("|")
+            print("             ", end="") # black space
+            print("|| {} | {} | {} ".format(row[0], row[1], row[2]), end="")
+            print("||")
+        print(" "*13 + "-"*13)
+
+
+
+
 
 def main():
-    print("Hello")
     cube = Rubik()
+    print(cube)
+    cube.u()
+
     print(cube)
     
 if __name__ == "__main__":
