@@ -1,6 +1,5 @@
  
- 
-class Rubik(object):
+ class Rubik(object):
 
     def __init__(self):
 
@@ -186,20 +185,4 @@ class Rubik(object):
 
         return cube
 
-
-
-
-
-def main():
-    cube = Rubik()
-    print(cube)
-    cube.u()
-    cube.d()
-    cube.b()
-    print(cube)
-    cube.fileOutput()
-    
-    
-if __name__ == "__main__":
-    main()     
 
