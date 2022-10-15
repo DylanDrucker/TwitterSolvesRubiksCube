@@ -16,7 +16,7 @@ class Rubik(object):
         # 1 2 3 4
         #   5
 
-
+        # Representing the cube
         self.face0 =   [[y,y,y], 
                         [y,y,y], 
                         [y,y,y]]
@@ -56,14 +56,15 @@ class Rubik(object):
         self.face2[2] = self.face1[2]
         self.face1[2] = face4Lower
 
-    def r2(self):
+    """ Shift right layer clockwise"""
+    def r(self):
         face0Lower = self.face0[2]
         self.face0[2] = self.takeColumn(self.face1, 2)[::-1]
         self.changeColumn(self.face1, 2, self.face5[0])
         self.face5[0] = self.takeColumn(self.face3, 0)[::-1]
         self.changeColumn(self.face3, 0, face0Lower)
 
-    """ Shift Left Layer Clockwise"""
+    """ Shift left layer clockwise"""
     def l(self):
         face0Upper = self.face0[0]
         self.face0[0] = self.takeColumn(self.face3, 2)
@@ -89,25 +90,30 @@ class Rubik(object):
         
     ############# COUNTERCLOCKWISE MOVES ###############
 
-    """ prime methods"""
+    """Prime methods"""
     def prime(self, move):
         for i in range(3):
             move()
 
+    ############# MOVE TWICE ###############
+
+    """Completes the given move twice"""
     def twice (self, move):
         for i in range(2):
             move()
 
     
 
-    ############ AUXILIAR METHODS #############
+    ############ AUXILIARY METHODS #############
 
+    """"Returns an array with a column of a face"""
     def takeColumn(self, face, colIndex):
         col = []
         for layer in face:
             col.append(layer[colIndex])
         return col
 
+    """"Changes the column of a face with a given input"""
     def changeColumn(self, face, colIndex, newColumn):
         for i in range(len(newColumn)):
             face[i][colIndex] = newColumn[i]
@@ -117,6 +123,8 @@ class Rubik(object):
 
 
     ###########  FILE OUTPUT  ##########
+    
+    """ove """
     def faceToText(self, face):
         text = ""
         for layer in face:
@@ -125,12 +133,27 @@ class Rubik(object):
         
         return text
 
+    """"Transforms face 4 to text in a format that works with our simulator"""
+    def face4ToText(self):
+        text = self.faceToText(self.face4)
+        text = text[::-1]
+        return text
+
+    """Creates a file with the current status of the cube"""
     def fileOutput(self):
-        f = open("myfile.txt", "w")
+        f = open("cubeStatus.txt", "w")
 
         for face in self.faces:
-            f.write(self.faceToText(face))
-            f.write("\n")
+            if (face == self.face4):
+                continue
+            else:
+                f.write(self.faceToText(face))
+                f.write("\n")
+            
+        f.write(self.face4ToText())
+        f.write("\n")
+
+
 
 
     ########## PRINT INSTANCE ###########
@@ -170,8 +193,12 @@ class Rubik(object):
 def main():
     cube = Rubik()
     print(cube)
-    cube.prime(cube.u)
+    cube.u()
+    cube.d()
+    cube.b()
     print(cube)
+    cube.fileOutput()
+    
     
 if __name__ == "__main__":
     main()     
